@@ -1,14 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import $ from "jquery";
-import "jquery";
+
 import "datatables.net";
 import "datatables.net-dt";
 import "datatables.net-dt/css/jquery.dataTables.css";
+
 import "./style.css";
+import { createRoot } from "react-dom/client";
 
 function createNestedTable(rowData: any) {
   // console.log({rowData})
-  const html = '<table id="' + rowData.id.replace(" ", "-") + '" class="stripe row-border order-column">';
+  const html =
+    '<table id="' +
+    rowData.id.replace(" ", "-") +
+    '" class="stripe row-border order-column">';
   return html;
 }
 
@@ -21,10 +27,48 @@ function colorizeRequestStatus(cell: Node, cellData: any) {
     (cell as HTMLElement).classList.add("text-danger");
   }
 }
+
 const MyRequests = () => {
   const mytableRef = useRef<any>(null);
   const [showNewChild, setShowNewChild] = useState("");
-  const rowData = [
+  //   const navigate = useNavigate();
+
+  const renderViewRequestDetailsButton = (id: string) => {
+    return (
+      <button
+        className="btn btn-primary w-100"
+        onClick={() => {
+          console.log({ id });
+          //   navigate(`/end-user/view-request-details`, {
+          //     state: {
+          //       requestId: rowData.requestId,
+          //     },
+          //   });
+        }}
+      >
+        View
+      </button>
+    );
+  };
+  const renderEditRequestDetailsButton = (id: string) => {
+    return (
+      <button
+        className="btn btn-primary w-100"
+        onClick={() => {
+          console.log({ id });
+          //   navigate(`/end-user/view-request-details`, {
+          //     state: {
+          //       requestId: rowData.requestId,
+          //     },
+          //   });
+        }}
+      >
+        Edit
+      </button>
+    );
+  };
+
+  const endUserRequstList = [
     {
       id: "Req-1",
       lastModifiedDate: "12/10/2020",
@@ -55,14 +99,14 @@ const MyRequests = () => {
       transactions: [
         { trId: "1", date: "10/10/2020", status: "Pending" },
         { trId: "2", date: "11/10/2020", status: "Rejected" },
-        { trId: "3", date: "12/10/2020", status: "Accepted" },
+        { trId: "3", date: "12/10/2020", status: "Pending" },
       ],
     },
   ];
 
   const columns = [
     { title: "Request ID", data: "id" },
-    { title: "Last Modifie dDate", data: "lastModifiedDate", searchable: true },
+    { title: "Last Modified Date", data: "lastModifiedDate", searchable: true },
     { title: "Active QR Code?", data: "activeQRCode" },
     {
       title: "Last Request Status",
@@ -128,7 +172,14 @@ const MyRequests = () => {
   // useeffect to draw the main table
   useEffect(() => {
     const mytable = $("#my-requests-table").DataTable({
-      data: rowData,
+      dom:
+        "<'topwrapper row above-table'<'table-title col-4'><'filer-by-date col-4'><'search col-4'f>>" + //should add a back button to call method to destroy the table
+        "<'col-sm-12 mt-5 main-table-content'tr>" +
+        "<'row below-table'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+      initComplete: function () {
+        $(".table-title").html("<h6>My Table Title</h6>"); // add an h6 element to the table-title div
+      },
+      data: endUserRequstList,
       columns: [
         {
           className: "details-control",
@@ -138,8 +189,15 @@ const MyRequests = () => {
         },
 
         ...columns,
+
+        {
+          orderable: false,
+          data: null,
+          defaultContent: "",
+        },
       ],
       destroy: true,
+      autoWidth: true,
       paging: true,
       pageLength: 5,
       searching: true,
@@ -148,33 +206,40 @@ const MyRequests = () => {
       order: [],
       lengthChange: true,
       info: true,
-      dom:
-        "<'topwrapper row above-table'<'table-title col-4'><'filer-by-date col-4'><'search col-4'f>>" + //should add a back button to call method to destroy the table
-        "<'col-sm-12 mt-5 main-table-content'tr>" +
-        "<'row below-table'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
-      initComplete: function () {
-        $(".table-title").html("<h6>My Table Title</h6>"); // add an h6 element to the table-title div
-      },
 
       columnDefs: [
         {
           targets: [0],
-          orderData: [0],
+          orderData: [1],
         },
         {
           targets: [1],
           orderData: [1],
         },
+        {
+          targets: -1,
+          orderable: false,
+          createdCell: (td: any, rowData: any) => {
+            if (rowData.lastRequestStatus === "Rejected") {
+              createRoot(td).render(renderEditRequestDetailsButton(rowData.id));
+            } else {
+              createRoot(td).render(renderViewRequestDetailsButton(rowData.id));
+            }
+          },
+        },
       ],
     });
     mytableRef.current = mytable;
-  }, [rowData]);
+  }, [endUserRequstList]);
 
   return (
     // <div className="main">
     //   <div className="container">
     <div className="container mt-5">
-      <table id="my-requests-table" className="stripe row-border order-column"></table>
+      <table
+        id="my-requests-table"
+        className="stripe row-border order-column"
+      ></table>
       {/* </div> */}
       {/* </div> */}
     </div>

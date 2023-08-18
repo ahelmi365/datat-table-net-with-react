@@ -31,19 +31,18 @@ function colorizeRequestStatus(cell: Node, cellData: any) {
 const MyRequests = () => {
   const mytableRef = useRef<any>(null);
   const [showNewChild, setShowNewChild] = useState("");
-  //   const navigate = useNavigate();
+    const navigate = useNavigate();
 
   const renderViewRequestDetailsButton = (id: string) => {
     return (
       <button
         className="btn btn-primary w-100"
         onClick={() => {
-          console.log({ id });
-          //   navigate(`/end-user/view-request-details`, {
-          //     state: {
-          //       requestId: rowData.requestId,
-          //     },
-          //   });
+            navigate(`/end-user/view-request-details`, {
+              state: {
+                requestId: id,
+              },
+            });
         }}
       >
         View
@@ -55,12 +54,11 @@ const MyRequests = () => {
       <button
         className="btn btn-primary w-100"
         onClick={() => {
-          console.log({ id });
-          //   navigate(`/end-user/view-request-details`, {
-          //     state: {
-          //       requestId: rowData.requestId,
-          //     },
-          //   });
+            navigate(`/end-user/edit-request-details`, {
+              state: {
+                requestId:id,
+              },
+            });
         }}
       >
         Edit

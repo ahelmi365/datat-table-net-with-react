@@ -11,6 +11,16 @@ function createNestedTable(rowData: any) {
   const html = '<table id="' + rowData.id.replace(" ", "-") + '">';
   return html;
 }
+
+function colorizeRequestStatus(cell: Node, cellData: any) {
+  if (cellData === "Accepted") {
+    (cell as HTMLElement).classList.add("text-success");
+  } else if (cellData === "Pending") {
+    (cell as HTMLElement).classList.add("text-warning");
+  } else if (cellData === "Rejected") {
+    (cell as HTMLElement).classList.add("text-danger");
+  }
+}
 const MyRequests = () => {
   const mytableRef = useRef<any>(null);
   const [showNewChild, setShowNewChild] = useState("");
@@ -19,11 +29,11 @@ const MyRequests = () => {
       id: "Req-1",
       lastModifiedDate: "12/10/2020",
       activeQRCode: "Yes",
-      lastRequestStatus: "Accpeted",
+      lastRequestStatus: "Accepted",
       transactions: [
-        { trId: "1", date: "10/10/2020", status: "pending" },
-        { trId: "2", date: "11/10/2020", status: "rejected" },
-        { trId: "3", date: "12/10/2020", status: "accepted" },
+        { trId: "1", date: "10/10/2020", status: "Pending" },
+        { trId: "2", date: "11/10/2020", status: "Rejected" },
+        { trId: "3", date: "12/10/2020", status: "Accepted" },
       ],
     },
     {
@@ -32,20 +42,20 @@ const MyRequests = () => {
       activeQRCode: "No",
       lastRequestStatus: "Rejected",
       transactions: [
-        { trId: "1", date: "10/10/2020", status: "pending" },
-        { trId: "2", date: "11/10/2020", status: "rejected" },
-        { trId: "3", date: "12/10/2020", status: "accepted" },
+        { trId: "1", date: "10/10/2020", status: "Pending" },
+        { trId: "2", date: "11/10/2020", status: "Rejected" },
+        { trId: "3", date: "12/10/2020", status: "Rejected" },
       ],
     },
     {
       id: "Req-3",
       lastModifiedDate: "12/10/2020",
       activeQRCode: "No",
-      lastRequestStatus: "Rejected",
+      lastRequestStatus: "Pending",
       transactions: [
-        { trId: "1", date: "10/10/2020", status: "pending" },
-        { trId: "2", date: "11/10/2020", status: "rejected" },
-        { trId: "3", date: "12/10/2020", status: "accepted" },
+        { trId: "1", date: "10/10/2020", status: "Pending" },
+        { trId: "2", date: "11/10/2020", status: "Rejected" },
+        { trId: "3", date: "12/10/2020", status: "Accepted" },
       ],
     },
   ];
@@ -54,7 +64,22 @@ const MyRequests = () => {
     { title: "Request ID", data: "id" },
     { title: "Last Modifie dDate", data: "lastModifiedDate" },
     { title: "Active QR Code?", data: "activeQRCode" },
-    { title: "Last Request Status", data: "lastRequestStatus" },
+    {
+      title: "Last Request Status",
+      data: "lastRequestStatus",
+      createdCell: colorizeRequestStatus,
+      //   createdCell: (cell: Node, cellData: any) => {
+      //     console.log({ cellData });
+
+      //     if (cellData === "Accepted") {
+      //       (cell as HTMLElement).classList.add("text-success");
+      //     } else if (cellData === "Pending") {
+      //       (cell as HTMLElement).classList.add("text-warning");
+      //     } else if (cellData === "Rejected") {
+      //       (cell as HTMLElement).classList.add("text-danger");
+      //     }
+      //   },
+    },
   ];
 
   // useeffct to show nested table (must be before the main useeffect to draw main table)
@@ -95,11 +120,15 @@ const MyRequests = () => {
               defaultContent: "",
               width: "2.25rem",
             },
-            { data: "trId", title: "ID" },
-            { data: "date", title: "Date" },
-            { data: "status", title: "Status" },
+            { data: "trId", title: "Transaction ID" },
+            { data: "date", title: "Transaction Date" },
+            {
+              data: "status",
+              title: "Status",
+              createdCell: colorizeRequestStatus,
+            },
           ],
-          scrollY: "100px",
+          scrollY: "150px",
         });
 
         tr.addClass("shown");
@@ -154,12 +183,12 @@ const MyRequests = () => {
   }, [rowData]);
 
   return (
-    <div className="main">
-      <div className="container">
-        <div className="row">
-          <table id="my-requests-table"></table>
-        </div>
-      </div>
+    // <div className="main">
+    //   <div className="container">
+    <div className="row">
+      <table id="my-requests-table"></table>
+      {/* </div> */}
+      {/* </div> */}
     </div>
   );
 };

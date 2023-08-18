@@ -7,7 +7,7 @@ import "datatables.net-dt/css/jquery.dataTables.css";
 import "./style.css";
 
 const MyRequests = () => {
-  let mytable: any;
+  const mytableRef = useRef<any>(null);
   const [showNewChild, setShowNewChild] = useState("");
   const rowData = [
     {
@@ -64,6 +64,7 @@ const MyRequests = () => {
 
   useEffect(() => {
     // Add event listener for opening and closing first level childdetails
+    const mytable = mytableRef.current;
     $("#my-requests-table tbody").on(
       "click",
       "td.details-control",
@@ -87,7 +88,7 @@ const MyRequests = () => {
           // Open this row
           row.child(format(rowData)).show();
           var id = rowData.id.replace(" ", "-");
-        //   setShowNewChild(id);
+          //   setShowNewChild(id);
           const childTable = $("#" + id);
           console.log({ id });
           console.log({ childTable });
@@ -109,7 +110,7 @@ const MyRequests = () => {
     );
   }, [showNewChild]);
   useEffect(() => {
-    mytable = $("#my-requests-table").DataTable({
+    const mytable = $("#my-requests-table").DataTable({
       data: rowData,
       columns: [
         {
@@ -150,6 +151,7 @@ const MyRequests = () => {
         },
       ],
     });
+    mytableRef.current = mytable;
   }, [rowData]);
   //   function format(rowData: any) {
   //     var html = '<table id="' + rowData.id.replace(" ", "-") + '">';

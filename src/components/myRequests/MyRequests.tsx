@@ -8,7 +8,7 @@ import "./style.css";
 
 function createNestedTable(rowData: any) {
   // console.log({rowData})
-  const html = '<table id="' + rowData.id.replace(" ", "-") + '">';
+  const html = '<table id="' + rowData.id.replace(" ", "-") + '" class="stripe row-border order-column">';
   return html;
 }
 
@@ -174,7 +174,7 @@ const MyRequests = () => {
     // <div className="main">
     //   <div className="container">
     <div className="container mt-5">
-      <table id="my-requests-table"></table>
+      <table id="my-requests-table" className="stripe row-border order-column"></table>
       {/* </div> */}
       {/* </div> */}
     </div>

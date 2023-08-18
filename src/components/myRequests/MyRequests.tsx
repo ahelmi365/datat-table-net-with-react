@@ -5,9 +5,9 @@ import $ from "jquery";
 import "datatables.net";
 import "datatables.net-dt";
 import "datatables.net-dt/css/jquery.dataTables.css";
+import { createRoot } from "react-dom/client";
 
 import "./style.css";
-import { createRoot } from "react-dom/client";
 
 function createNestedTable(rowData: any) {
   // console.log({rowData})
@@ -31,18 +31,18 @@ function colorizeRequestStatus(cell: Node, cellData: any) {
 const MyRequests = () => {
   const mytableRef = useRef<any>(null);
   const [showNewChild, setShowNewChild] = useState("");
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const renderViewRequestDetailsButton = (id: string) => {
     return (
       <button
         className="btn btn-primary w-100"
         onClick={() => {
-            navigate(`/end-user/view-request-details`, {
-              state: {
-                requestId: id,
-              },
-            });
+          navigate(`/end-user/view-request-details`, {
+            state: {
+              requestId: id,
+            },
+          });
         }}
       >
         View
@@ -54,11 +54,11 @@ const MyRequests = () => {
       <button
         className="btn btn-primary w-100"
         onClick={() => {
-            navigate(`/end-user/edit-request-details`, {
-              state: {
-                requestId:id,
-              },
-            });
+          navigate(`/end-user/edit-request-details`, {
+            state: {
+              requestId: id,
+            },
+          });
         }}
       >
         Edit
@@ -231,15 +231,11 @@ const MyRequests = () => {
   }, [endUserRequstList]);
 
   return (
-    // <div className="main">
-    //   <div className="container">
     <div className="container mt-5">
       <table
         id="my-requests-table"
         className="stripe row-border order-column"
       ></table>
-      {/* </div> */}
-      {/* </div> */}
     </div>
   );
 };

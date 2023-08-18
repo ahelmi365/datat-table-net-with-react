@@ -62,23 +62,12 @@ const MyRequests = () => {
 
   const columns = [
     { title: "Request ID", data: "id" },
-    { title: "Last Modifie dDate", data: "lastModifiedDate" },
+    { title: "Last Modifie dDate", data: "lastModifiedDate", searchable: true },
     { title: "Active QR Code?", data: "activeQRCode" },
     {
       title: "Last Request Status",
       data: "lastRequestStatus",
       createdCell: colorizeRequestStatus,
-      //   createdCell: (cell: Node, cellData: any) => {
-      //     console.log({ cellData });
-
-      //     if (cellData === "Accepted") {
-      //       (cell as HTMLElement).classList.add("text-success");
-      //     } else if (cellData === "Pending") {
-      //       (cell as HTMLElement).classList.add("text-warning");
-      //     } else if (cellData === "Rejected") {
-      //       (cell as HTMLElement).classList.add("text-danger");
-      //     }
-      //   },
     },
   ];
 
@@ -160,22 +149,21 @@ const MyRequests = () => {
       lengthChange: true,
       info: true,
       dom:
-        "<'topwrapper'>" +
-        "<'tran-wrapper'f<'tran-date'><'show_entries'><'#colvis'><'#download'><'#loading1'>>" + //should add a back button to call method to destroy the table
-        "<'row scrollme'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
-      lengthMenu: [
-        [10, 25, 50, -1],
-        [10, 25, 50, "All"],
-      ],
+        "<'topwrapper row above-table'<'table-title col-4'><'filer-by-date col-4'><'search col-4'f>>" + //should add a back button to call method to destroy the table
+        "<'col-sm-12 mt-5 main-table-content'tr>" +
+        "<'row below-table'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+      initComplete: function () {
+        $(".table-title").html("<h6>My Table Title</h6>"); // add an h6 element to the table-title div
+      },
+
       columnDefs: [
         {
           targets: [0],
-          orderData: [1],
+          orderData: [0],
         },
         {
           targets: [1],
-          orderData: [0],
+          orderData: [1],
         },
       ],
     });
@@ -185,7 +173,7 @@ const MyRequests = () => {
   return (
     // <div className="main">
     //   <div className="container">
-    <div className="row">
+    <div className="container mt-5">
       <table id="my-requests-table"></table>
       {/* </div> */}
       {/* </div> */}
